@@ -18963,9 +18963,9 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
           // data stream
           $imgsrc = '@'.base64_decode(substr($imgsrc, strlen('data:image/gif;base64,')));
           $type = '';
-        } elseif ( $this->allowLocalFiles && substr($imgsrc, 0, 7) === 'file://') {
+        } elseif ( $this->allowLocalFiles /*&& substr($imgsrc, 0, 7) === 'file://'*/) {
           // get image type from a local file path
-          $imgsrc = substr($imgsrc, 7);
+          //$imgsrc = substr($imgsrc, 7);
           $type = TCPDF_IMAGES::getImageFileType($imgsrc);
         } else {
 					if (($imgsrc[0] === '/') AND !empty($_SERVER['DOCUMENT_ROOT']) AND ($_SERVER['DOCUMENT_ROOT'] != '/')) {
