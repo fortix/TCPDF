@@ -18947,11 +18947,27 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					// data stream
 					$imgsrc = '@'.base64_decode(substr($imgsrc, 1));
 					$type = '';
-				} elseif ( $this->allowLocalFiles && substr($imgsrc, 0, 7) === 'file://') {
-                    // get image type from a local file path
-                    $imgsrc = substr($imgsrc, 7);
-                    $type = TCPDF_IMAGES::getImageFileType($imgsrc);
-                } else {
+        } elseif (substr($imgsrc, 0, strlen('data:image/jpeg;base64,')) === 'data:image/jpeg;base64,') {
+          // data stream
+          $imgsrc = '@'.base64_decode(substr($imgsrc, strlen('data:image/jpeg;base64,')));
+          $type = '';
+        } elseif (substr($imgsrc, 0, strlen('data:image/jpg;base64,')) === 'data:image/jpg;base64,') {
+          // data stream
+          $imgsrc = '@'.base64_decode(substr($imgsrc, strlen('data:image/jpg;base64,')));
+          $type = '';
+        } elseif (substr($imgsrc, 0, strlen('data:image/png;base64,')) === 'data:image/png;base64,') {
+          // data stream
+          $imgsrc = '@'.base64_decode(substr($imgsrc, strlen('data:image/png;base64,')));
+          $type = '';
+        } elseif (substr($imgsrc, 0, strlen('data:image/gif;base64,')) === 'data:image/gif;base64,') {
+          // data stream
+          $imgsrc = '@'.base64_decode(substr($imgsrc, strlen('data:image/gif;base64,')));
+          $type = '';
+        } elseif ( $this->allowLocalFiles && substr($imgsrc, 0, 7) === 'file://') {
+          // get image type from a local file path
+          $imgsrc = substr($imgsrc, 7);
+          $type = TCPDF_IMAGES::getImageFileType($imgsrc);
+        } else {
 					if (($imgsrc[0] === '/') AND !empty($_SERVER['DOCUMENT_ROOT']) AND ($_SERVER['DOCUMENT_ROOT'] != '/')) {
 						// fix image path
 						$findroot = strpos($imgsrc, $_SERVER['DOCUMENT_ROOT']);
