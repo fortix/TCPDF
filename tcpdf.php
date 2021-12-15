@@ -18947,16 +18947,20 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					// data stream
 					$imgsrc = '@'.base64_decode(substr($imgsrc, 1));
 					$type = '';
-                } elseif (preg_match('#^(data:image/(jpeg|jpg|gif|png);base64,)(.*)$#i', $imgsrc, $matches)) {
+                } elseif (preg_match('#^(?:data:image/(?:jpeg|jpg|gif|png);base64,)(.*)$#i', $imgsrc, $matches)) {
 				    // support for direct base64 encoded data stream
-                    $imgsrc = '@'.base64_decode(substr($imgsrc, strlen($matches[1])));
+                    $base64decoded = base64_decode($matches[1]);
+                    if ($base64decoded===false) {
+                        break; // if decoding is not possible, we will handle this the same way as if the src attribute is empty
+                    }
+                    $imgsrc = '@'.$base64decoded;
                     $type = '';
                 } elseif ( $this->allowLocalFiles && file_exists($imgsrc)) {
                     // get image type from a local file path if not prefixed, but file exists
                     $type = TCPDF_IMAGES::getImageFileType($imgsrc);
-                } elseif ( $this->allowLocalFiles && preg_match('#^(file://)(.*)$#i', $imgsrc, $matches)) {
+                } elseif ( $this->allowLocalFiles && preg_match('#^(?:file://)(.*)$#i', $imgsrc, $matches)) {
                     // get image type from a local file path
-                    $imgsrc = substr($imgsrc, strlen($matches[1]));
+                    $imgsrc = $matches[1];
                     $type = TCPDF_IMAGES::getImageFileType($imgsrc);
                 } else {
 					if (($imgsrc[0] === '/') AND !empty($_SERVER['DOCUMENT_ROOT']) AND ($_SERVER['DOCUMENT_ROOT'] != '/')) {
